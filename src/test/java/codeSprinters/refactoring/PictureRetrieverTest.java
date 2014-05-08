@@ -25,12 +25,13 @@ public class PictureRetrieverTest {
     }
 
     @Test
-    public void test2() {
+    public void shouldBeAbleToSeePicturesOfFriend() {
     	
         Picture picture = new Picture();
         User user1 = new User();
         User user2 = new User();
         user2.addFriend(user1);
+        
         PictureDao.addPicturesForUser(user1, Arrays.asList(picture));
 
         List<Picture> list = pictureRetriever.getPicturesFor(user1, user2);
@@ -39,26 +40,27 @@ public class PictureRetrieverTest {
     }
 
     @Test
-    public void test3() {
+    public void shouldNotBePossibleToGetPicturesOfNewUsers() {
         User user1 = new User();
         User user2 = new User();
 
         List<Picture> list = pictureRetriever.getPicturesFor(user1, user2);
 
-        assertThat(list, is(nullValue()));
+        assertThat(list, nullValue());
     }
 
     @Test
-    public void test4() {
+    public void shouldNotBePossibleToSeePicturesOfUsersWhoAreNotFriends() {
         Picture picture = new Picture();
         User user1 = new User();
         User user2 = new User();
         User user3 = new User();
         user2.addFriend(user3);
+        
         PictureDao.addPicturesForUser(user1, Arrays.asList(picture));
 
         List<Picture> list = pictureRetriever.getPicturesFor(user1, user2);
 
-        assertThat(list, is(nullValue()));
+        assertThat(list, nullValue());
     }
 }
