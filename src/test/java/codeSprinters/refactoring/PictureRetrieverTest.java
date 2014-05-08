@@ -10,6 +10,10 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+
 public class PictureRetrieverTest {
 
     private PictureRetriever pictureRetriever = new PictureRetriever();
@@ -21,7 +25,7 @@ public class PictureRetrieverTest {
     }
 
     @Test
-    public void test2() throws NoLoggedUserException {
+    public void test2() {
         Picture picture = new Picture();
         User user1 = new User();
         User user2 = new User();
@@ -30,21 +34,21 @@ public class PictureRetrieverTest {
 
         List<Picture> list = pictureRetriever.getPicturesFor(user1, user2);
 
-        Assert.assertThat(list, Matchers.containsInAnyOrder(picture));
+        assertThat(list, Matchers.containsInAnyOrder(picture));
     }
 
     @Test
-    public void test3() throws NoLoggedUserException {
+    public void test3() {
         User user1 = new User();
         User user2 = new User();
 
         List<Picture> list = pictureRetriever.getPicturesFor(user1, user2);
 
-        Assert.assertThat(list, Matchers.is(Matchers.nullValue()));
+        assertThat(list, is(nullValue()));
     }
 
     @Test
-    public void test4() throws NoLoggedUserException {
+    public void test4() {
         Picture picture = new Picture();
         User user1 = new User();
         User user2 = new User();
@@ -54,6 +58,6 @@ public class PictureRetrieverTest {
 
         List<Picture> list = pictureRetriever.getPicturesFor(user1, user2);
 
-        Assert.assertThat(list, Matchers.is(Matchers.nullValue()));
+        assertThat(list, is(nullValue()));
     }
 }

@@ -1,4 +1,4 @@
 package codeSprinters.refactoring;
 
-public class NoLoggedUserException extends Exception {
+public class NoLoggedUserException extends RuntimeException {
 }
