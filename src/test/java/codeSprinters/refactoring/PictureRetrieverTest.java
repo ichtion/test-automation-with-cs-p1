@@ -25,7 +25,7 @@ public class PictureRetrieverTest {
     }
 
     @Test
-    public void test2() {
+    public void ShouldGetPicturesAfterAddingFriend() {
         Picture picture = new Picture();
         User user1 = new User();
         User user2 = new User();
@@ -38,7 +38,7 @@ public class PictureRetrieverTest {
     }
 
     @Test
-    public void test3() {
+    public void ShouldNotAccessToTheGallery() {
         User user1 = new User();
         User user2 = new User();
 
@@ -48,7 +48,7 @@ public class PictureRetrieverTest {
     }
 
     @Test
-    public void test4() {
+    public void ShouldNotAllowPicturesForFriendsContact() {
         Picture picture = new Picture();
         User user1 = new User();
         User user2 = new User();
