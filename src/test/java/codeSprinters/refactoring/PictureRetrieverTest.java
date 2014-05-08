@@ -19,7 +19,7 @@ public class PictureRetrieverTest {
     private PictureRetriever pictureRetriever = new PictureRetriever();
 
     @Test(expected = NoLoggedUserException.class)
-    public void test1() throws Exception {
+    public void shouldNotBePossibleToGetPictureOfNewUser() throws Exception {
         User user1 = new User();
         pictureRetriever.getPicturesFor(user1, null);
     }
