@@ -18,48 +18,39 @@ import codeSprinters.refactoring.domain.User;
 public class PictureRetrieverTest {
 
 	private PictureRetriever pictureRetriever = new PictureRetriever();
-	private User userWithImages, userLogin, userUnrelated;
+	private User userWithImages, userThatLogins;
 	private Picture picture = new Picture();
 
 	@Before
 	public void setUp() {
 		userWithImages = new User();
 		PictureDao.addPicturesForUser(userWithImages, Arrays.asList(picture));
-		userLogin = new User();
+		userThatLogins = new User();
 	}
 
 	@Test(expected = NoLoggedUserException.class)
 	public void failureWhenNoUserIsLoggedIn() throws NoLoggedUserException {
-		userLogin = null;
-		pictureRetriever.getPicturesFor(userWithImages, userLogin);
+		userThatLogins = null;
+		pictureRetriever.getPicturesFor(userWithImages, userThatLogins);
 	}
 
 	@Test
 	public void firendShouldHaveAccessToPictures() {
 
-		userLogin.addFriend(userWithImages);
-		PictureDao.addPicturesForUser(userWithImages, Arrays.asList(picture));
+		userThatLogins.addFriend(userWithImages);
 
 		List<Picture> retrievedImages = pictureRetriever.getPicturesFor(
-				userWithImages, userLogin);
+				userWithImages, userThatLogins);
 
 		assertThat(retrievedImages, Matchers.containsInAnyOrder(picture));
 	}
 
 	@Test
-	public void noAccessToGaleryForUnfirendedUsers() {
-
-		List<Picture> list = pictureRetriever.getPicturesFor(userWithImages,
-				userLogin);
-		assertThat(list, is(nullValue()));
-	}
-
-	@Test
 	public void noAccessToGaleryForUnrelatedUsers() {
-		userUnrelated = new User();
-		userLogin.addFriend(userUnrelated);
-		List<Picture> list = pictureRetriever.getPicturesFor(userWithImages,
-				userLogin);
-		assertThat(list, is(nullValue()));
+		User userUnrelated = new User();
+		userThatLogins.addFriend(userUnrelated);
+		List<Picture> retrievedImages = pictureRetriever.getPicturesFor(userWithImages,
+				userThatLogins);
+		assertThat(retrievedImages, is(nullValue()));
 	}
 }
