@@ -19,7 +19,7 @@ public class PictureRetrieverTest {
     private PictureRetriever pictureRetriever = new PictureRetriever();
 
     @Test(expected = NoLoggedUserException.class)
-    public void test1() throws Exception {
+    public void ShouldNotBeAbleToSeePicturesOfExsitingUser() throws Exception {
         User user1 = new User();
         pictureRetriever.getPicturesFor(user1, null);
     }
@@ -41,20 +41,6 @@ public class PictureRetrieverTest {
     public void ShouldNotAccessToTheGallery() {
         User user1 = new User();
         User user2 = new User();
-
-        List<Picture> list = pictureRetriever.getPicturesFor(user1, user2);
-
-        assertThat(list, is(nullValue()));
-    }
-
-    @Test
-    public void ShouldNotAllowPicturesForFriendsContact() {
-        Picture picture = new Picture();
-        User user1 = new User();
-        User user2 = new User();
-        User user3 = new User();
-        user2.addFriend(user3);
-        PictureDao.addPicturesForUser(user1, Arrays.asList(picture));
 
         List<Picture> list = pictureRetriever.getPicturesFor(user1, user2);
 
