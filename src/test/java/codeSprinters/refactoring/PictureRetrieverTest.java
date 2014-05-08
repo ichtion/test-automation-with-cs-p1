@@ -48,19 +48,4 @@ public class PictureRetrieverTest {
 
         assertThat(list, nullValue());
     }
-
-    @Test
-    public void shouldNotBePossibleToSeePicturesOfUsersWhoAreNotFriends() {
-        Picture picture = new Picture();
-        User user1 = new User();
-        User user2 = new User();
-        User user3 = new User();
-        user2.addFriend(user3);
-        
-        PictureDao.addPicturesForUser(user1, Arrays.asList(picture));
-
-        List<Picture> list = pictureRetriever.getPicturesFor(user1, user2);
-
-        assertThat(list, nullValue());
-    }
 }
