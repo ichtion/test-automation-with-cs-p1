@@ -1,62 +1,57 @@
 package codeSprinters.refactoring;
 
-import codeSprinters.refactoring.dao.PictureDao;
 import codeSprinters.refactoring.domain.Picture;
 import codeSprinters.refactoring.domain.User;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static codeSprinters.refactoring.dao.PictureDao.addPicturesForUser;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class PictureRetrieverTest {
 
     private PictureRetriever pictureRetriever = new PictureRetriever();
+    private final List<Picture> pictures = asList(new Picture());
+    private final User friendWithPictures = new User();
+    private final User anotherFriendWithoutPictures = new User();
+    private final User loggedInUserWithFriend = new User();
+
+    @Before
+    public void setup() {
+        addPicturesForUser(friendWithPictures, pictures);
+        loggedInUserWithFriend.addFriend(friendWithPictures);
+    }
 
     @Test(expected = NoLoggedUserException.class)
-    public void test1() throws Exception {
-        User user1 = new User();
-        pictureRetriever.getPicturesFor(user1, null);
+    public void shouldThrowNoLoggedUserExceptionWhenNoLoggedUserIsProvided() throws Exception {
+        User NO_LOGGED_USER = null;
+
+        pictureRetriever.getPicturesFor(friendWithPictures, NO_LOGGED_USER);
     }
 
     @Test
-    public void test2() {
-        Picture picture = new Picture();
-        User user1 = new User();
-        User user2 = new User();
-        user2.addFriend(user1);
-        PictureDao.addPicturesForUser(user1, Arrays.asList(picture));
+    public void shouldRetrievePicturesFromUserOnlyIfItIsFriendOfLoggedInUser() {
+        User friend = new User();
+        List<Picture> friendsPictures = asList(new Picture());
+        addPicturesForUser(friend, friendsPictures);
+        loggedInUserWithFriend.addFriend(friend);
 
-        List<Picture> list = pictureRetriever.getPicturesFor(user1, user2);
+        List<Picture> list = pictureRetriever.getPicturesFor(friend, loggedInUserWithFriend);
 
-        assertThat(list, Matchers.containsInAnyOrder(picture));
+        assertThat(list, containsInAnyOrder(friendsPictures.toArray()));
     }
 
     @Test
-    public void test3() {
-        User user1 = new User();
-        User user2 = new User();
+    public void shouldReturnNullWhenAskedToRetrievePicturesForUserThatIsNotFriendOfLoggedInUser() {
+        User loggedInUser = new User();
+        loggedInUser.addFriend(anotherFriendWithoutPictures);
 
-        List<Picture> list = pictureRetriever.getPicturesFor(user1, user2);
-
-        assertThat(list, is(nullValue()));
-    }
-
-    @Test
-    public void test4() {
-        Picture picture = new Picture();
-        User user1 = new User();
-        User user2 = new User();
-        User user3 = new User();
-        user2.addFriend(user3);
-        PictureDao.addPicturesForUser(user1, Arrays.asList(picture));
-
-        List<Picture> list = pictureRetriever.getPicturesFor(user1, user2);
+        List<Picture> list = pictureRetriever.getPicturesFor(friendWithPictures, loggedInUser);
 
         assertThat(list, is(nullValue()));
     }
