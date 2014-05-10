@@ -16,14 +16,14 @@ import static org.junit.Assert.assertThat;
 public class PictureRetrieverTest {
 
     private PictureRetriever pictureRetriever = new PictureRetriever();
-    private final Picture picture = new Picture();
+    private final List<Picture> pictures = asList(new Picture());
     private final User friendWithPictures = new User();
     private final User anotherFriendWithoutPictures = new User();
     private final User loggedInUserWithFriend = new User();
 
     @Before
     public void setup() {
-        addPicturesForUser(friendWithPictures, asList(picture));
+        addPicturesForUser(friendWithPictures, pictures);
         loggedInUserWithFriend.addFriend(friendWithPictures);
     }
 
@@ -37,13 +37,13 @@ public class PictureRetrieverTest {
     @Test
     public void shouldRetrievePicturesFromUserOnlyIfItIsFriendOfLoggedInUser() {
         User friend = new User();
-        Picture friendsPicture = new Picture();
-        addPicturesForUser(friend, asList(friendsPicture));
+        List<Picture> friendsPictures = asList(new Picture());
+        addPicturesForUser(friend, friendsPictures);
         loggedInUserWithFriend.addFriend(friend);
 
         List<Picture> list = pictureRetriever.getPicturesFor(friend, loggedInUserWithFriend);
 
-        assertThat(list, containsInAnyOrder(friendsPicture));
+        assertThat(list, containsInAnyOrder(friendsPictures.toArray()));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class PictureRetrieverTest {
         User loggedInUser = new User();
         loggedInUser.addFriend(anotherFriendWithoutPictures);
 
-        List<Picture> list = pictureRetriever.getPicturesFor(loggedInUser, friendWithPictures);
+        List<Picture> list = pictureRetriever.getPicturesFor(friendWithPictures, loggedInUser);
 
         assertThat(list, is(nullValue()));
     }
